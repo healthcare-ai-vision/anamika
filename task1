@@ -1,0 +1,85 @@
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+img1 = cv2.imread('bird.jpg')
+img2 = cv2.imread('brain.jpg')
+
+# Convert BGR to RGB for display
+img1 = cv2.cvtColor(img1, cv2.COLOR_BGR2RGB)
+img2 = cv2.cvtColor(img2, cv2.COLOR_BGR2RGB)
+
+plt.figure(figsize=(8,4))
+plt.subplot(1,2,1)
+plt.imshow(img1)
+plt.title("Image 1")
+plt.axis('off')
+
+plt.subplot(1,2,2)
+plt.imshow(img2)
+plt.title("Image 2")
+plt.axis('off')
+plt.show()
+
+#grayscale conversion
+gray1 = cv2.cvtColor(img1, cv2.COLOR_RGB2GRAY)
+gray2 = cv2.cvtColor(img2, cv2.COLOR_RGB2GRAY)
+
+plt.imshow(gray1, cmap='gray')
+plt.title("Grayscale Image")
+plt.axis('off')
+plt.show()
+
+#Histogram Visualization
+plt.figure(figsize=(8,4))
+
+plt.subplot(1,2,1)
+plt.hist(gray1.ravel(), bins=256)
+plt.title("Histogram Image 1")
+
+plt.subplot(1,2,2)
+plt.hist(gray2.ravel(), bins=256)
+plt.title("Histogram Image 2")
+
+plt.show()
+
+#Image Resizing
+resized1 = cv2.resize(gray1, (256, 256))
+resized2 = cv2.resize(gray2, (256, 256))
+
+#edge Detection (Canny)
+edges1 = cv2.Canny(resized1, 100, 200)
+edges2 = cv2.Canny(resized2, 100, 200)
+
+plt.figure(figsize=(8,4))
+plt.subplot(1,2,1)
+plt.imshow(edges1, cmap='gray')
+plt.title("Edges Image 1")
+plt.axis('off')
+
+plt.subplot(1,2,2)
+plt.imshow(edges2, cmap='gray')
+plt.title("Edges Image 2")
+plt.axis('off')
+plt.show()
+
+#Noise Addition
+noise = np.random.normal(0, 25, resized1.shape)
+noisy_img = resized1 + noise
+noisy_img = np.clip(noisy_img, 0, 255).astype(np.uint8)
+
+#Noise Removal (Gaussian Filter)
+denoised_img = cv2.GaussianBlur(noisy_img, (5,5), 0)
+
+plt.figure(figsize=(8,4))
+plt.subplot(1,2,1)
+plt.imshow(noisy_img, cmap='gray')
+plt.title("Noisy Image")
+plt.axis('off')
+
+plt.subplot(1,2,2)
+plt.imshow(denoised_img, cmap='gray')
+plt.title("Denoised Image")
+plt.axis('off')
+plt.show()
+
